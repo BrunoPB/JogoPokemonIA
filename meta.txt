@@ -1,0 +1,3 @@
+﻿Name      = Jogo IA
+Version   = 1.0.0
+Credits   = Bruno Pena, Diogo Castro, Matheus Rangel
