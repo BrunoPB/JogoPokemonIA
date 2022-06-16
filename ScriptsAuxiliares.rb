@@ -45,7 +45,7 @@ def pbTrainerBattleCore(*args)
       foePartyStarts.push(foeParty.length)
       for i in 27..33 do
         if $game_variables[i] != 0
-          foeParty.push(Pokemon.new($game_variables[27],100))
+          foeParty.push(Pokemon.new($game_variables[i],100))
         end
       end
       foeEndSpeeches.push(arg[3] || trainer.lose_text)
