@@ -29,15 +29,6 @@ class PokeBattle_AI
       return true
     end
 
-    # Sudden Death rule - Não sei exatamente o que é, mas a biblioteca diz ser importante 👍
-    if @battle.rules["suddendeath"] && battler.turnCount>0
-      if battler.hp<=battler.totalhp/4 && pbAIRandom(100)<30
-        return true
-      elsif battler.hp<=battler.totalhp/2 && pbAIRandom(100)<80
-        return true
-      end
-    end
-
     # Se o pokemon for morrer para o Perish Song
     if battler.effects[PBEffects::PerishSong]==1
       return true
@@ -67,7 +58,7 @@ class PokeBattle_AI
         scoreSum   = 0
         scoreCount = 0
         battler.eachOpposing do |b|
-          scoreSum += pbGetMoveScore(battler.moves[idxEncoredMove],battler,b,skill)
+          scoreSum += getMoveScore(battler.moves[idxEncoredMove],battler,b)
           scoreCount += 1
         end
         if scoreCount>0 && scoreSum/scoreCount<=20
@@ -96,12 +87,24 @@ class PokeBattle_AI
       switchScore -= 5
     end
 
-    # Se o nosso pokemon for de um tipo super efetivo ao tipo do adversário
-    if Effectiveness.super_effective_type?(myType[0],typeTarget[0],typeTarget[1])
-      switchScore += 5
+    # Se o nosso pokemon tiver pelo menos 1 ataque super efetivo ao tipo do adversário
+    numResist = 0
+    battler.eachMoveWithIndex do |u,i|
+      move = battler.moves[i]
+      if Effectiveness.super_effective_type?(move.type,typeTarget[0],typeTarget[1]) && move.baseDamage > 0 # Caso de ter ataque super efetivo
+        switchScore += 5
+        if Effectiveness.super_effective_type?(move.type,typeTarget[0]) &&
+          Effectiveness.super_effective_type?(move.type,typeTarget[1]) # Caso de ter um ataque 4x efetivo
+          switchScore += 10
+        end
+        break
+      end
+      if Effectiveness.resistant_type?(move.type,typeTarget[0],typeTarget[1]) || move.baseDamage <= 0
+        numResist += 1
+      end
     end
-    if Effectiveness.super_effective_type?(myType[1],typeTarget[0],typeTarget[1])
-      switchScore += 5
+    if numResist >= battler.moves.length # Caso de todos os ataques serem resistidos pelo adversário
+      switchScore -= 15
     end
 
     return switchScore
@@ -117,7 +120,7 @@ class PokeBattle_AI
       list.push(i)
     end
 
-    if list.length>0 # Quer dizer que há pokemons que podem entrar
+    if list.length > 0 # Quer dizer que há pokemons que podem entrar
       newPkmn = calcBestPkmn(idxBattler,list)
       return @battle.pbRegisterSwitch(idxBattler,newPkmn)
     end
@@ -144,11 +147,11 @@ class PokeBattle_AI
       if Effectiveness.super_effective_type?(pkmnTypes[1],typeTarget[0],typeTarget[1])
         scores[i] += 1
       end
-      if Effectiveness.resistant_type?(typeTarget[1],pkmnTypes[0],pkmnTypes[1])
-        scores[i] += 1
+      if Effectiveness.resistant_type?(typeTarget[0],pkmnTypes[0],pkmnTypes[1])
+        scores[i] -= 1
       end
-      if Effectiveness.resistant_type?(typeTarget[2],pkmnTypes[0],pkmnTypes[1])
-        scores[i] += 1
+      if Effectiveness.resistant_type?(typeTarget[1],pkmnTypes[0],pkmnTypes[1])
+        scores[i] -= 1
       end
     end
     iMax = scores.each_with_index.max[1]

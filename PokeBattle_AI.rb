@@ -30,7 +30,7 @@ class PokeBattle_AI
     return Math.sqrt(varianceTimesN/n)
   end
   
-  # Função para decidir se deve trocar ou atacar
+  # Função para decidir se deve trocar ou atacar. Tambem executa essas ações
   def pbDefaultChooseEnemyCommand(idxBattler)
       return if pbEnemyShouldWithdraw?(idxBattler)
       pbChooseMoves(idxBattler)

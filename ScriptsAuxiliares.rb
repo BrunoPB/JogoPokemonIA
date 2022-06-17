@@ -1,6 +1,6 @@
 # Função para iniciar as variáveis de time como 0
 def startGame
-  for i in 27..33
+  for i in 27..32
     $game_variables[i] = 0
   end
 end
@@ -8,12 +8,11 @@ end
 # Função que adicionar um Pokemon na equipe adversária
 def colocarNaEquipeAdversaria(pkmn)
   for i in 27..33
-    if $game_variables[i] == 0
+    if $game_variables[i] == 0 && i < 33
       $game_variables[i] = pkmn
       pbMessage(_INTL("Pokemon adicionado com sucesso."))
       break
-    end
-    if i == 32
+    elsif i == 33
       pbMessage(_INTL("A equipe adversária já está cheia."))
     end
   end
@@ -21,7 +20,7 @@ end
 
 # Função para exluir toda a equipe adversária
 def excluirEquipeAdversaria
-  for i in 27..33
+  for i in 27..32
     $game_variables[i] = 0
   end
   pbMessage(_INTL("Equipe adversária excluída."))
@@ -43,7 +42,7 @@ def pbTrainerBattleCore(*args)
       Events.onTrainerPartyLoad.trigger(nil,trainer)
       foeTrainers.push(trainer)
       foePartyStarts.push(foeParty.length)
-      for i in 27..33 do
+      for i in 27..32 do
         if $game_variables[i] != 0
           foeParty.push(Pokemon.new($game_variables[i],100))
         end
