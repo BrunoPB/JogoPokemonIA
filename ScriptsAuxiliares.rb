@@ -78,5 +78,5 @@ def pbTrainerBattleCore(*args)
   # Retornando resultado da batalha (1 se tiver ganhado, 2 se tiver perdido)
   Input.update
   pbSet(outcomeVar,decision)
-  return decision
+  return decision == 1 ? true : false 
 end
