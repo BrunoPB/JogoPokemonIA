@@ -61,9 +61,6 @@ class PokeBattle_AI
     # Utiliza uma função padrão da biblioteca que retorna um score se faz algum sentido usar o ataque no momento
     score = pbGetMoveScoreFunctionCode(100,move,user,target,100)
 
-    # Retorna 0 se o ataque não for ter efeito algum
-    # return 0 if score <= 0
-
     # Se o ataque for Last Resort e não pode ser usado (por algum motivo a função pbGetMoveScoreFunctionCode não lida com isso)
     if move.id === :LASTRESORT
       hasThisMove = false; hasOtherMoves = false; hasUnusedMoves = false
@@ -160,7 +157,6 @@ class PokeBattle_AI
   # Função para calcular o score baseado no dano do ataque
   def getMoveScoreByDamage(score,move,user,target)
     # Se o alvo for imune ao ataque (geralmente por tipagem)
-    # return score if score<=0 || pbCheckMoveImmunity(score,move,user,target,100)
     if pbCheckMoveImmunity(score,move,user,target,100)
       score -= 80
     end
