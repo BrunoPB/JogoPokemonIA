@@ -83,7 +83,7 @@ class PokeBattle_AI
     if Effectiveness.super_effective_type?(typeTarget[0],myType[0],myType[1])
       switchScore -= 5
     end
-    if Effectiveness.super_effective_type?(typeTarget[1],myType[0],myType[1])
+    if typeTarget.length > 1 && Effectiveness.super_effective_type?(typeTarget[1],myType[0],myType[1])
       switchScore -= 5
     end
 
@@ -94,7 +94,7 @@ class PokeBattle_AI
       if Effectiveness.super_effective_type?(move.type,typeTarget[0],typeTarget[1]) && move.baseDamage > 0 # Caso de ter ataque super efetivo
         switchScore += 5
         if Effectiveness.super_effective_type?(move.type,typeTarget[0]) &&
-          Effectiveness.super_effective_type?(move.type,typeTarget[1]) # Caso de ter um ataque 4x efetivo
+          (typeTarget.length > 1 && Effectiveness.super_effective_type?(move.type,typeTarget[1])) # Caso de ter um ataque 4x efetivo
           switchScore += 10
         end
         break
@@ -162,7 +162,7 @@ class PokeBattle_AI
       if Effectiveness.super_effective_type?(typeTarget[0],pkmnTypes[0],pkmnTypes[1])
         scores[i] -= 1
       end
-      if Effectiveness.super_effective_type?(typeTarget[1],pkmnTypes[0],pkmnTypes[1])
+      if typeTarget.length > 1 && Effectiveness.super_effective_type?(typeTarget[1],pkmnTypes[0],pkmnTypes[1])
         scores[i] -= 1
       end
 
@@ -170,7 +170,7 @@ class PokeBattle_AI
       if Effectiveness.resistant_type?(typeTarget[0],pkmnTypes[0],pkmnTypes[1])
         scores[i] -= 1
       end
-      if Effectiveness.resistant_type?(typeTarget[1],pkmnTypes[0],pkmnTypes[1])
+      if typeTarget.length > 1 && Effectiveness.resistant_type?(typeTarget[1],pkmnTypes[0],pkmnTypes[1])
         scores[i] -= 1
       end
     end
