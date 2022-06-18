@@ -141,12 +141,32 @@ class PokeBattle_AI
       scores.push(0)
       pkmnTypes = @battle.pbParty(idxBattler)[p].types
       typeTarget = battler.pbDirectOpposing(true).pbTypes();
+
+      # Se o pokemon é super efetivo no adversário
       if Effectiveness.super_effective_type?(pkmnTypes[0],typeTarget[0],typeTarget[1])
         scores[i] += 1
       end
       if Effectiveness.super_effective_type?(pkmnTypes[1],typeTarget[0],typeTarget[1])
         scores[i] += 1
       end
+
+      # Se o pokemon resiste o adversário
+      if Effectiveness.resistant_type?(pkmnTypes[0],typeTarget[0],typeTarget[1])
+        scores[i] += 1
+      end
+      if Effectiveness.resistant_type?(pkmnTypes[1],typeTarget[0],typeTarget[1])
+        scores[i] += 1
+      end
+
+      # Se adversário é super efetivo no pokemon
+      if Effectiveness.super_effective_type?(typeTarget[0],pkmnTypes[0],pkmnTypes[1])
+        scores[i] -= 1
+      end
+      if Effectiveness.super_effective_type?(typeTarget[1],pkmnTypes[0],pkmnTypes[1])
+        scores[i] -= 1
+      end
+
+      # Se o adversário resiste o pokemon
       if Effectiveness.resistant_type?(typeTarget[0],pkmnTypes[0],pkmnTypes[1])
         scores[i] -= 1
       end
