@@ -1,6 +1,7 @@
 class PokeBattle_AI
   # Função que retorna true se deve-se trocar de Pokemon. Também chama a função de troca
   def pbEnemyShouldWithdraw?(idxBattler)
+
     switchScore = 0
     battler = @battle.battlers[idxBattler]
 
@@ -113,15 +114,16 @@ class PokeBattle_AI
   # Função para fazer a troca de pokemon
   def makeSwitch(idxBattler)
     battler = @battle.battlers[idxBattler]
-    list = []
+    list = [@battle.pbPartyOrder(idxBattler)[0]] # Colocando o Pokémon atual na lista
     # Verificar quais pokemons podem trocar
     @battle.pbParty(idxBattler).each_with_index do |pkmn,i|
       next if !@battle.pbCanSwitch?(idxBattler,i)
       list.push(i)
     end
 
-    if list.length > 0 # Quer dizer que há pokemons que podem entrar
+    if list.length > 1 # Quer dizer que há pokemons que podem entrar
       newPkmn = calcBestPkmn(idxBattler,list)
+      return false if newPkmn == @battle.pbPartyOrder(idxBattler)[0] # Não efetua troca se o melhor Pokémon for o que está em campo
       return @battle.pbRegisterSwitch(idxBattler,newPkmn)
     end
 
@@ -174,7 +176,17 @@ class PokeBattle_AI
         scores[i] -= 1
       end
     end
-    iMax = scores.each_with_index.max[1]
+
+    # Pegando o index do maior score
+    iMax = 0
+    sMax = scores[0]
+    scores.each_with_index do |s,i|
+      if s > sMax
+        iMax = i
+        sMax = s
+      end
+    end
+
     return pkmns[iMax]
   end
 end
