@@ -145,41 +145,33 @@ class PokeBattle_AI
       # Se o pokemon é super efetivo no adversário
       if Effectiveness.super_effective_type?(pkmnTypes[0],typeTarget[0],typeTarget[1])
         scores[i] += 1
-        puts "#{@battle.pbParty(idxBattler)[p].name} super efetivo em #{battler.pbDirectOpposing(true).name}"
       end
       if !pkmnTypes[1].nil? && Effectiveness.super_effective_type?(pkmnTypes[1],typeTarget[0],typeTarget[1])
         scores[i] += 1
-        puts "#{@battle.pbParty(idxBattler)[p].name} super efetivo em #{battler.pbDirectOpposing(true).name}"
       end
 
       # Se o pokemon resiste o adversário
       if Effectiveness.resistant_type?(typeTarget[0],pkmnTypes[0],pkmnTypes[1])
         scores[i] += 1
-        puts "#{@battle.pbParty(idxBattler)[p].name} resistente em #{battler.pbDirectOpposing(true).name}"
       end
       if !pkmnTypes[1].nil? && Effectiveness.resistant_type?(typeTarget[1],pkmnTypes[0],pkmnTypes[1])
         scores[i] += 1
-        puts "#{@battle.pbParty(idxBattler)[p].name} resistente em #{battler.pbDirectOpposing(true).name}"
       end
 
       # Se adversário é super efetivo no pokemon
       if Effectiveness.super_effective_type?(typeTarget[0],pkmnTypes[0],pkmnTypes[1])
         scores[i] -= 1
-        puts "#{battler.pbDirectOpposing(true).name} super efetivo em #{@battle.pbParty(idxBattler)[p].name}"
       end
       if !pkmnTypes[1].nil? && Effectiveness.super_effective_type?(typeTarget[1],pkmnTypes[0],pkmnTypes[1])
         scores[i] -= 1
-        puts "#{battler.pbDirectOpposing(true).name} super efetivo em #{@battle.pbParty(idxBattler)[p].name}"
       end
 
       # Se o adversário resiste o pokemon
       if Effectiveness.resistant_type?(pkmnTypes[0],typeTarget[0],typeTarget[1])
         scores[i] -= 1
-        puts "#{battler.pbDirectOpposing(true).name} resiste em #{@battle.pbParty(idxBattler)[p].name}"
       end
       if !pkmnTypes[1].nil? && Effectiveness.resistant_type?(pkmnTypes[1],typeTarget[0],typeTarget[1])
         scores[i] -= 1
-        puts "#{battler.pbDirectOpposing(true).name} resiste em #{@battle.pbParty(idxBattler)[p].name}"
       end
     end
     iMax = scores.each_with_index.max[1]
