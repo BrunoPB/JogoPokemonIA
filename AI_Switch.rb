@@ -83,7 +83,7 @@ class PokeBattle_AI
     if Effectiveness.super_effective_type?(typeTarget[0],myType[0],myType[1])
       switchScore -= 5
     end
-    if typeTarget.length > 1 && Effectiveness.super_effective_type?(typeTarget[1],myType[0],myType[1])
+    if !typeTarget[1].nil? && Effectiveness.super_effective_type?(typeTarget[1],myType[0],myType[1])
       switchScore -= 5
     end
 
@@ -94,7 +94,7 @@ class PokeBattle_AI
       if Effectiveness.super_effective_type?(move.type,typeTarget[0],typeTarget[1]) && move.baseDamage > 0 # Caso de ter ataque super efetivo
         switchScore += 5
         if Effectiveness.super_effective_type?(move.type,typeTarget[0]) &&
-          (typeTarget.length > 1 && Effectiveness.super_effective_type?(move.type,typeTarget[1])) # Caso de ter um ataque 4x efetivo
+          (!typeTarget[1].nil? &&  Effectiveness.super_effective_type?(move.type,typeTarget[1])) # Caso de ter um ataque 4x efetivo
           switchScore += 10
         end
         break
@@ -145,33 +145,41 @@ class PokeBattle_AI
       # Se o pokemon é super efetivo no adversário
       if Effectiveness.super_effective_type?(pkmnTypes[0],typeTarget[0],typeTarget[1])
         scores[i] += 1
+        puts "#{@battle.pbParty(idxBattler)[p].name} super efetivo em #{battler.pbDirectOpposing(true).name}"
       end
-      if Effectiveness.super_effective_type?(pkmnTypes[1],typeTarget[0],typeTarget[1])
+      if !pkmnTypes[1].nil? && Effectiveness.super_effective_type?(pkmnTypes[1],typeTarget[0],typeTarget[1])
         scores[i] += 1
+        puts "#{@battle.pbParty(idxBattler)[p].name} super efetivo em #{battler.pbDirectOpposing(true).name}"
       end
 
       # Se o pokemon resiste o adversário
-      if Effectiveness.resistant_type?(pkmnTypes[0],typeTarget[0],typeTarget[1])
+      if Effectiveness.resistant_type?(typeTarget[0],pkmnTypes[0],pkmnTypes[1])
         scores[i] += 1
+        puts "#{@battle.pbParty(idxBattler)[p].name} resistente em #{battler.pbDirectOpposing(true).name}"
       end
-      if Effectiveness.resistant_type?(pkmnTypes[1],typeTarget[0],typeTarget[1])
+      if !pkmnTypes[1].nil? && Effectiveness.resistant_type?(typeTarget[1],pkmnTypes[0],pkmnTypes[1])
         scores[i] += 1
+        puts "#{@battle.pbParty(idxBattler)[p].name} resistente em #{battler.pbDirectOpposing(true).name}"
       end
 
       # Se adversário é super efetivo no pokemon
       if Effectiveness.super_effective_type?(typeTarget[0],pkmnTypes[0],pkmnTypes[1])
         scores[i] -= 1
+        puts "#{battler.pbDirectOpposing(true).name} super efetivo em #{@battle.pbParty(idxBattler)[p].name}"
       end
-      if typeTarget.length > 1 && Effectiveness.super_effective_type?(typeTarget[1],pkmnTypes[0],pkmnTypes[1])
+      if !pkmnTypes[1].nil? && Effectiveness.super_effective_type?(typeTarget[1],pkmnTypes[0],pkmnTypes[1])
         scores[i] -= 1
+        puts "#{battler.pbDirectOpposing(true).name} super efetivo em #{@battle.pbParty(idxBattler)[p].name}"
       end
 
       # Se o adversário resiste o pokemon
-      if Effectiveness.resistant_type?(typeTarget[0],pkmnTypes[0],pkmnTypes[1])
+      if Effectiveness.resistant_type?(pkmnTypes[0],typeTarget[0],typeTarget[1])
         scores[i] -= 1
+        puts "#{battler.pbDirectOpposing(true).name} resiste em #{@battle.pbParty(idxBattler)[p].name}"
       end
-      if typeTarget.length > 1 && Effectiveness.resistant_type?(typeTarget[1],pkmnTypes[0],pkmnTypes[1])
+      if !pkmnTypes[1].nil? && Effectiveness.resistant_type?(pkmnTypes[1],typeTarget[0],typeTarget[1])
         scores[i] -= 1
+        puts "#{battler.pbDirectOpposing(true).name} resiste em #{@battle.pbParty(idxBattler)[p].name}"
       end
     end
     iMax = scores.each_with_index.max[1]

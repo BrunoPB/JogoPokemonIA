@@ -8,7 +8,7 @@ class PokeBattle_AI
     user.eachMoveWithIndex do |u,i|
       next if !@battle.pbCanChooseMove?(idxBattler,i,false)
       moveValue = calcMove(user,i)
-      choices.push(moveValue) if moveValue.length > 0
+      choices.push(moveValue)
     end
 
     # Seleciona e usa o melhor ataque dentre os que podem ser usados nessa situação
@@ -43,14 +43,14 @@ class PokeBattle_AI
 
     if target_data.num_targets == 0 # Se o ataque afeta o próprio usuário ou a arena (altera o calculo de dano na função seguinte)
       score = getMoveScore(move,user,user)
-      moveValue = [idxMove,score,-1] if score > 0
+      moveValue = [idxMove,score,-1]
     else # Se o ataque tem o oponente como alvo
       score = 0
       @battle.eachBattler do |b|
         next if !@battle.pbMoveCanTarget?(user.index,b.index,target_data)
         score += getMoveScore(move,user,b)
       end
-      moveValue = [idxMove,score,-1] #if score > 0
+      moveValue = [idxMove,score,-1]
     end
 
     return moveValue
